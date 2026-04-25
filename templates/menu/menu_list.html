@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Our Menu — Savoria{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <p style="color:var(--gold);font-weight:600;letter-spacing:2px;font-size:0.8rem;">WHAT WE OFFER</p>
+    <h1 class="section-title">Our Full Menu</h1>
+    <div class="section-divider mx-auto"></div>
+    <p class="section-subtitle">Every dish crafted with care and the finest ingredients</p>
+  </div>
+
+  <!-- Category Filters -->
+  <div class="d-flex flex-wrap gap-2 justify-content-center mb-5">
+    <a href="{% url 'menu' %}" class="filter-pill {% if not selected_category %}active{% endif %}">All Items</a>
+    {% for cat in categories %}
+    <a href="{% url 'menu' %}?category={{ cat.slug }}" class="filter-pill {% if selected_category == cat.slug %}active{% endif %}">{{ cat.name }}</a>
+    {% endfor %}
+  </div>
+
+  <!-- Items Grid -->
+  {% if items %}
+  <div class="row g-4">
+    {% for item in items %}
+    <div class="col-sm-6 col-lg-4 col-xl-3 fade-in-up" style="animation-delay:{{ forloop.counter0 }}0ms;">
+      <div class="menu-card h-100">
+        <div style="position:relative;overflow:hidden;">
+          {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.name }}">
+          {% else %}
+            <div style="height:200px;background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(245,158,11,0.15));display:flex;align-items:center;justify-content:center;font-size:4rem;">🍽️</div>
+          {% endif %}
+          {% if item.is_featured %}
+            <span style="position:absolute;top:12px;left:12px;background:var(--gold);color:#000;border-radius:20px;padding:3px 10px;font-size:0.72rem;font-weight:700;">⭐ Featured</span>
+          {% endif %}
+        </div>
+        <div class="menu-card-body">
+          <p style="color:var(--text-muted);font-size:0.75rem;margin-bottom:0.25rem;">{{ item.category.name }}</p>
+          <h5 style="font-family:'Playfair Display',serif;margin-bottom:0.5rem;">{{ item.name }}</h5>
+          <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">{{ item.description|truncatewords:14 }}</p>
+          <div class="menu-card-badges mb-3">
+            {% if item.is_vegetarian %}<span class="badge-veg">🌿 Veg</span>{% endif %}
+            {% if item.is_spicy %}<span class="badge-spicy">🌶️ Spicy</span>{% endif %}
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="menu-card-price">₹{{ item.price }}</span>
+            <div class="d-flex gap-2">
+              <a href="{% url 'item_detail' item.slug %}" class="btn-ghost" style="padding:0.35rem 0.8rem;font-size:0.8rem;text-decoration:none;">View</a>
+              <a href="{% url 'add_to_cart' item.pk %}" class="btn-primary-custom" style="padding:0.35rem 0.8rem;font-size:0.8rem;text-decoration:none;">+ Add</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <div style="font-size:4rem;margin-bottom:1rem;">🍽️</div>
+    <h4>No items found</h4>
+    <p style="color:var(--text-muted);">Try selecting a different category.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

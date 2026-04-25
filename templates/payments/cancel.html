@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Payment Cancelled — Savoria{% endblock %}
+{% block content %}
+<div style="min-height:80vh;display:flex;align-items:center;justify-content:center;text-align:center;">
+  <div style="max-width:500px;animation:fadeInUp 0.6s ease;">
+    <div style="font-size:5rem;margin-bottom:1rem;">😔</div>
+    <h1 style="font-family:'Playfair Display',serif;color:var(--danger);margin-bottom:1rem;">Payment Cancelled</h1>
+    <p style="color:var(--text-secondary);margin-bottom:0.5rem;">Your order <strong style="color:var(--accent);">#{{ order.pk }}</strong> was not completed.</p>
+    <p style="color:var(--text-muted);margin-bottom:2rem;">No charge was made. You can retry payment anytime.</p>
+    <div class="d-flex gap-3 justify-content-center">
+      <a href="{% url 'create_checkout_session' order.pk %}" class="btn-amber text-decoration-none px-4 py-2 rounded-3 fw-bold">Retry Payment →</a>
+      <a href="{% url 'menu' %}" class="btn-ghost text-decoration-none">Back to Menu</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

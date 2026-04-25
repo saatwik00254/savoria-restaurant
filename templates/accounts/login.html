@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Login — Savoria{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card fade-in-up">
+    <div class="auth-logo">Sav<span>oria</span></div>
+    <p class="auth-subtitle">Welcome back! Sign in to your account.</p>
+
+    <form method="post" id="login-form">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Username or Email</label>
+        <input type="text" name="username" id="id_username" class="form-control" placeholder="Enter your username" required autofocus />
+      </div>
+      <div class="mb-4">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" id="id_password" class="form-control" placeholder="Enter your password" required />
+      </div>
+      {% if form.non_field_errors %}
+        <div class="alert-toast error mb-3">❌ {{ form.non_field_errors.0 }}</div>
+      {% endif %}
+      <button type="submit" class="btn-amber w-100 py-3 rounded-3" style="font-size:1rem;">Sign In →</button>
+    </form>
+
+    <div class="auth-divider">or</div>
+    <p style="text-align:center;color:var(--text-muted);font-size:0.9rem;">
+      Don't have an account? <a href="{% url 'signup' %}" style="color:var(--accent);font-weight:600;">Create one free</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block title %}Dashboard Overview — Savoria{% endblock %}
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin:0;">Dashboard</h1>
+    <p style="color:var(--text-muted);margin:0;">Welcome back, {{ request.user.first_name|default:request.user.username }}!</p>
+  </div>
+  <a href="{% url 'dashboard_orders' %}" class="btn-primary-custom text-decoration-none">View All Orders →</a>
+</div>
+
+<!-- Stats Grid -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="stat-card">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-number" style="color:var(--accent);">{{ total_orders }}</div>
+          <div class="stat-label">Total Orders</div>
+        </div>
+        <div class="stat-icon" style="background:rgba(59,130,246,0.15);">📋</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-number" style="color:var(--warning);">{{ pending_orders }}</div>
+          <div class="stat-label">Pending Orders</div>
+        </div>
+        <div class="stat-icon" style="background:rgba(245,158,11,0.15);">⏳</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-number" style="color:var(--success);">₹{{ total_revenue|floatformat:0 }}</div>
+          <div class="stat-label">Total Revenue</div>
+        </div>
+        <div class="stat-icon" style="background:rgba(16,185,129,0.15);">💰</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-number" style="color:var(--gold);">{{ total_users }}</div>
+          <div class="stat-label">Registered Users</div>
+        </div>
+        <div class="stat-icon" style="background:rgba(245,158,11,0.15);">👥</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- Revenue Chart -->
+  <div class="col-lg-8">
+    <div class="glass-card p-4" style="border-radius:var(--radius-lg);">
+      <h5 style="font-family:'Playfair Display',serif;margin-bottom:1.5rem;">Revenue — Last 7 Days</h5>
+      <canvas id="revenueChart" height="100"></canvas>
+    </div>
+  </div>
+  <!-- Popular Items -->
+  <div class="col-lg-4">
+    <div class="glass-card p-4" style="border-radius:var(--radius-lg);">
+      <h5 style="font-family:'Playfair Display',serif;margin-bottom:1.5rem;">🔥 Popular Items</h5>
+      {% for item in popular_items %}
+      <div class="d-flex justify-content-between align-items-center py-2" style="border-bottom:1px solid var(--border);">
+        <span style="font-size:0.9rem;">{{ forloop.counter }}. {{ item.item_name }}</span>
+        <span style="background:rgba(245,158,11,0.15);color:var(--gold);padding:2px 10px;border-radius:20px;font-size:0.8rem;font-weight:600;">{{ item.total_qty }} sold</span>
+      </div>
+      {% empty %}
+      <p style="color:var(--text-muted);text-align:center;padding:1rem 0;">No data yet</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Recent Orders -->
+<div class="glass-card" style="border-radius:var(--radius-lg);overflow:hidden;">
+  <div class="p-4 d-flex justify-content-between align-items-center" style="border-bottom:1px solid var(--border);">
+    <h5 style="font-family:'Playfair Display',serif;margin:0;">Recent Orders</h5>
+    <a href="{% url 'dashboard_orders' %}" class="btn-ghost" style="padding:0.3rem 0.8rem;font-size:0.85rem;text-decoration:none;">View All</a>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Payment</th><th>Date</th><th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in recent_orders %}
+      <tr>
+        <td style="color:var(--accent);font-weight:700;">#{{ order.pk }}</td>
+        <td>{{ order.user.get_full_name|default:order.user.username }}</td>
+        <td style="color:var(--gold);font-weight:600;">₹{{ order.total_amount }}</td>
+        <td><span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+        <td>{% if order.payment_status == 'paid' %}<span class="paid-badge">Paid</span>{% else %}<span class="unpaid-badge">{{ order.get_payment_status_display }}</span>{% endif %}</td>
+        <td style="color:var(--text-muted);">{{ order.created_at|date:"M d, Y" }}</td>
+        <td>
+          <form method="post" action="{% url 'update_order_status' order.pk %}" class="d-flex gap-1">
+            {% csrf_token %}
+            <select name="status" class="form-select" style="width:auto;padding:0.25rem 0.5rem;font-size:0.8rem;">
+              {% for val, label in status_choices %}
+                <option value="{{ val }}" {% if order.status == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="btn-primary-custom" style="padding:0.25rem 0.6rem;font-size:0.8rem;">✓</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const ctx = document.getElementById('revenueChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: {{ revenue_labels|safe }},
+    datasets: [{
+      label: 'Revenue (₹)',
+      data: {{ revenue_data|safe }},
+      borderColor: '#3b82f6',
+      backgroundColor: 'rgba(59,130,246,0.1)',
+      borderWidth: 2.5,
+      fill: true,
+      tension: 0.4,
+      pointBackgroundColor: '#f59e0b',
+      pointBorderColor: '#fff',
+      pointRadius: 5,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', callback: v => '₹'+v } }
+    }
+  }
+});
+</script>
+{% endblock %}

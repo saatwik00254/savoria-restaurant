@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Savoria — Premium Dining & Online Food Ordering{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="container position-relative">
+    <div class="row align-items-center">
+      <div class="col-lg-6" style="animation: fadeInUp 0.8s ease;">
+        <p style="color:var(--gold);font-weight:600;letter-spacing:2px;font-size:0.85rem;">🍽️ PREMIUM RESTAURANT</p>
+        <h1 class="hero-title">Taste the <em>Art</em> of Fine Dining</h1>
+        <p class="hero-subtitle">From our kitchen to your table — handcrafted dishes made with the freshest ingredients. Order online in minutes.</p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="{% url 'menu' %}" class="btn-gold text-decoration-none" style="padding:0.8rem 2rem;font-size:1rem;">Explore Menu →</a>
+          <a href="{% url 'signup' %}" class="btn-ghost text-decoration-none" style="padding:0.8rem 2rem;font-size:1rem;">Create Account</a>
+        </div>
+        <div class="d-flex gap-4 mt-4">
+          <div><div style="font-size:1.6rem;font-weight:700;color:var(--gold);">50+</div><div style="color:var(--text-muted);font-size:0.85rem;">Menu Items</div></div>
+          <div><div style="font-size:1.6rem;font-weight:700;color:var(--gold);">4.9★</div><div style="color:var(--text-muted);font-size:0.85rem;">Rating</div></div>
+          <div><div style="font-size:1.6rem;font-weight:700;color:var(--gold);">30min</div><div style="color:var(--text-muted);font-size:0.85rem;">Delivery</div></div>
+        </div>
+      </div>
+      <div class="col-lg-6 d-none d-lg-flex justify-content-center" style="animation: float 4s ease-in-out infinite;">
+        <div style="font-size: 14rem; line-height: 1; filter: drop-shadow(0 20px 60px rgba(245,158,11,0.3));">🍜</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+{% if categories %}
+<section class="py-5" style="background:rgba(255,255,255,0.02);">
+  <div class="container">
+    <div class="text-center mb-4">
+      <p style="color:var(--gold);font-weight:600;letter-spacing:2px;font-size:0.8rem;">EXPLORE BY</p>
+      <h2 class="section-title">Food Categories</h2>
+    </div>
+    <div class="row g-3 justify-content-center">
+      {% for cat in categories %}
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <a href="{% url 'menu' %}?category={{ cat.slug }}" class="text-decoration-none">
+          <div class="glass-card p-3 text-center" style="cursor:pointer;">
+            {% if cat.image %}
+              <img src="{{ cat.image.url }}" alt="{{ cat.name }}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;margin-bottom:0.75rem;">
+            {% else %}
+              <div style="font-size:2.5rem;margin-bottom:0.5rem;">🍽️</div>
+            {% endif %}
+            <div style="font-weight:600;font-size:0.9rem;">{{ cat.name }}</div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- FEATURED ITEMS -->
+{% if featured_items %}
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p style="color:var(--gold);font-weight:600;letter-spacing:2px;font-size:0.8rem;">CHEF'S SELECTION</p>
+      <h2 class="section-title">Featured Dishes</h2>
+      <div class="section-divider mx-auto"></div>
+      <p class="section-subtitle">Handpicked favourites loved by our customers</p>
+    </div>
+    <div class="row g-4">
+      {% for item in featured_items %}
+      <div class="col-sm-6 col-lg-3 fade-in-up" style="animation-delay:{{ forloop.counter0 }}00ms;">
+        <div class="menu-card h-100">
+          {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.name }}">
+          {% else %}
+            <div style="height:200px;background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(245,158,11,0.2));display:flex;align-items:center;justify-content:center;font-size:4rem;">🍽️</div>
+          {% endif %}
+          <div class="menu-card-body">
+            <h5 style="font-family:'Playfair Display',serif;margin-bottom:0.5rem;">{{ item.name }}</h5>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">{{ item.description|truncatewords:12 }}</p>
+            <div class="menu-card-badges">
+              {% if item.is_vegetarian %}<span class="badge-veg">🌿 Veg</span>{% endif %}
+              {% if item.is_spicy %}<span class="badge-spicy">🌶️ Spicy</span>{% endif %}
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="menu-card-price">₹{{ item.price }}</span>
+              <a href="{% url 'add_to_cart' item.pk %}" class="btn-primary-custom" style="padding:0.4rem 1rem;font-size:0.85rem;border-radius:8px;text-decoration:none;">+ Add</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-5">
+      <a href="{% url 'menu' %}" class="btn-amber px-5 py-3 rounded-3 text-decoration-none fw-bold">View Full Menu →</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- WHY US -->
+<section class="py-5" style="background:rgba(255,255,255,0.02);">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Why Choose Savoria?</h2>
+      <div class="section-divider mx-auto"></div>
+    </div>
+    <div class="row g-4">
+      {% for item in "1234"|make_list %}
+      <div class="col-md-3">
+        <div class="glass-card p-4 text-center h-100">
+          {% if forloop.counter == 1 %}
+            <div style="font-size:2.5rem;margin-bottom:1rem;">👨‍🍳</div>
+            <h5>Expert Chefs</h5>
+            <p style="color:var(--text-muted);font-size:0.9rem;">Our world-class chefs craft every dish with passion and precision.</p>
+          {% elif forloop.counter == 2 %}
+            <div style="font-size:2.5rem;margin-bottom:1rem;">🚀</div>
+            <h5>Fast Delivery</h5>
+            <p style="color:var(--text-muted);font-size:0.9rem;">Hot & fresh food delivered in 30 minutes or less, guaranteed.</p>
+          {% elif forloop.counter == 3 %}
+            <div style="font-size:2.5rem;margin-bottom:1rem;">🌿</div>
+            <h5>Fresh Ingredients</h5>
+            <p style="color:var(--text-muted);font-size:0.9rem;">Farm-to-table freshness in every bite. No compromises.</p>
+          {% else %}
+            <div style="font-size:2.5rem;margin-bottom:1rem;">🔒</div>
+            <h5>Secure Payments</h5>
+            <p style="color:var(--text-muted);font-size:0.9rem;">Pay safely with Stripe — trusted by millions worldwide.</p>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

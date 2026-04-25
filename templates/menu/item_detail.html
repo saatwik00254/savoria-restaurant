@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}{{ item.name }} — Savoria{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row g-5 align-items-center">
+    <div class="col-lg-5">
+      {% if item.image %}
+        <img src="{{ item.image.url }}" alt="{{ item.name }}" style="width:100%;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);">
+      {% else %}
+        <div style="height:380px;background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(245,158,11,0.2));border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:8rem;">🍽️</div>
+      {% endif %}
+    </div>
+    <div class="col-lg-7">
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.5rem;">
+        <a href="{% url 'menu' %}" style="color:var(--text-muted);">Menu</a> › {{ item.category.name }}
+      </p>
+      <h1 style="font-family:'Playfair Display',serif;font-size:2.5rem;margin-bottom:0.75rem;">{{ item.name }}</h1>
+      <div class="menu-card-badges mb-3">
+        {% if item.is_vegetarian %}<span class="badge-veg">🌿 Vegetarian</span>{% endif %}
+        {% if item.is_spicy %}<span class="badge-spicy">🌶️ Spicy</span>{% endif %}
+        {% if item.is_featured %}<span style="background:rgba(245,158,11,0.15);color:var(--gold);border:1px solid rgba(245,158,11,0.3);border-radius:20px;padding:2px 10px;font-size:0.72rem;font-weight:600;">⭐ Chef's Pick</span>{% endif %}
+      </div>
+      <p style="color:var(--text-secondary);font-size:1.05rem;line-height:1.8;margin-bottom:2rem;">{{ item.description }}</p>
+      <div style="font-size:2.5rem;font-weight:700;color:var(--gold);margin-bottom:2rem;">₹{{ item.price }}</div>
+      <a href="{% url 'add_to_cart' item.pk %}" class="btn-amber px-5 py-3 rounded-3 fw-bold text-decoration-none me-3">🛒 Add to Cart</a>
+      <a href="{% url 'menu' %}" class="btn-ghost px-4 py-3 rounded-3 text-decoration-none">← Back to Menu</a>
+    </div>
+  </div>
+
+  {% if related %}
+  <div class="mt-5">
+    <h3 style="font-family:'Playfair Display',serif;margin-bottom:2rem;">More from {{ item.category.name }}</h3>
+    <div class="row g-4">
+      {% for r in related %}
+      <div class="col-sm-6 col-md-3">
+        <div class="menu-card">
+          {% if r.image %}<img src="{{ r.image.url }}" alt="{{ r.name }}">{% else %}<div style="height:160px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:3rem;">🍽️</div>{% endif %}
+          <div class="menu-card-body">
+            <h6 style="font-family:'Playfair Display',serif;">{{ r.name }}</h6>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <span style="color:var(--gold);font-weight:700;">₹{{ r.price }}</span>
+              <a href="{% url 'add_to_cart' r.pk %}" class="btn-primary-custom" style="padding:0.3rem 0.7rem;font-size:0.8rem;text-decoration:none;">+ Add</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
