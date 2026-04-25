@@ -8,6 +8,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-in-producti
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS += ['.onrender.com']   # always allow Render deployments
 
 # Trust Render's HTTPS proxy
 CSRF_TRUSTED_ORIGINS = [
