@@ -15,7 +15,7 @@ def signup_view(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, f'Welcome, {user.first_name}! Your account has been created.')
             return redirect('home')
     else:
@@ -30,7 +30,7 @@ def login_view(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, f'Welcome back, {user.first_name or user.username}!')
             next_url = request.GET.get('next', 'home')
             return redirect(next_url)

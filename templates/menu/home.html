@@ -6,24 +6,22 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
-  <div class="container position-relative">
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
     <div class="row align-items-center">
       <div class="col-lg-6" style="animation: fadeInUp 0.8s ease;">
-        <p style="color:var(--gold);font-weight:600;letter-spacing:2px;font-size:0.85rem;">🍽️ PREMIUM RESTAURANT</p>
+        <p class="overline mb-2">🍽️ Premium Restaurant</p>
         <h1 class="hero-title">Taste the <em>Art</em> of Fine Dining</h1>
         <p class="hero-subtitle">From our kitchen to your table — handcrafted dishes made with the freshest ingredients. Order online in minutes.</p>
         <div class="d-flex gap-3 flex-wrap">
-          <a href="{% url 'menu' %}" class="btn-gold text-decoration-none" style="padding:0.8rem 2rem;font-size:1rem;">Explore Menu →</a>
-          <a href="{% url 'signup' %}" class="btn-ghost text-decoration-none" style="padding:0.8rem 2rem;font-size:1rem;">Create Account</a>
+          <a href="{% url 'menu' %}" class="btn-gold text-decoration-none">Explore Menu →</a>
+          <a href="{% url 'signup' %}" class="btn-ghost text-decoration-none" style="border-color:rgba(255,255,255,0.4);color:#fff;">Create Account</a>
         </div>
         <div class="d-flex gap-4 mt-4">
-          <div><div style="font-size:1.6rem;font-weight:700;color:var(--gold);">50+</div><div style="color:var(--text-muted);font-size:0.85rem;">Menu Items</div></div>
-          <div><div style="font-size:1.6rem;font-weight:700;color:var(--gold);">4.9★</div><div style="color:var(--text-muted);font-size:0.85rem;">Rating</div></div>
-          <div><div style="font-size:1.6rem;font-weight:700;color:var(--gold);">30min</div><div style="color:var(--text-muted);font-size:0.85rem;">Delivery</div></div>
+          <div><div class="hero-stat-num">50+</div><div class="hero-stat-label">Menu Items</div></div>
+          <div><div class="hero-stat-num">4.9★</div><div class="hero-stat-label">Rating</div></div>
+          <div><div class="hero-stat-num">30min</div><div class="hero-stat-label">Delivery</div></div>
         </div>
-      </div>
-      <div class="col-lg-6 d-none d-lg-flex justify-content-center" style="animation: float 4s ease-in-out infinite;">
-        <div style="font-size: 14rem; line-height: 1; filter: drop-shadow(0 20px 60px rgba(245,158,11,0.3));">🍜</div>
       </div>
     </div>
   </div>
@@ -31,7 +29,7 @@
 
 <!-- CATEGORIES -->
 {% if categories %}
-<section class="py-5" style="background:rgba(255,255,255,0.02);">
+<section class="py-5 section-warm">
   <div class="container">
     <div class="text-center mb-4">
       <p style="color:var(--gold);font-weight:600;letter-spacing:2px;font-size:0.8rem;">EXPLORE BY</p>
@@ -59,7 +57,7 @@
 
 <!-- FEATURED ITEMS -->
 {% if featured_items %}
-<section class="py-5">
+<section class="py-5 section-light">
   <div class="container">
     <div class="text-center mb-5">
       <p style="color:var(--gold);font-weight:600;letter-spacing:2px;font-size:0.8rem;">CHEF'S SELECTION</p>
@@ -77,7 +75,7 @@
             <div style="height:200px;background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(245,158,11,0.2));display:flex;align-items:center;justify-content:center;font-size:4rem;">🍽️</div>
           {% endif %}
           <div class="menu-card-body">
-            <h5 style="font-family:'Playfair Display',serif;margin-bottom:0.5rem;">{{ item.name }}</h5>
+            <h5 style="font-family:'Cormorant Garamond',serif;margin-bottom:0.5rem;">{{ item.name }}</h5>
             <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">{{ item.description|truncatewords:12 }}</p>
             <div class="menu-card-badges">
               {% if item.is_vegetarian %}<span class="badge-veg">🌿 Veg</span>{% endif %}
@@ -100,7 +98,7 @@
 {% endif %}
 
 <!-- WHY US -->
-<section class="py-5" style="background:rgba(255,255,255,0.02);">
+<section class="py-5 section-warm">
   <div class="container">
     <div class="text-center mb-5">
       <h2 class="section-title">Why Choose Savoria?</h2>
