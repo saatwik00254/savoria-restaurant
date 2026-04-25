@@ -12,7 +12,7 @@ ALLOWED_HOSTS += ['.onrender.com']   # always allow Render deployments
 
 # Trust Render's HTTPS proxy
 CSRF_TRUSTED_ORIGINS = [
-    '*',
+    'https://*.onrender.com',
     'http://127.0.0.1:8000',
     'http://localhost:8000',
 ]
