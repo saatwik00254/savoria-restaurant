@@ -1,0 +1,8 @@
+# Force LF line endings for shell scripts (critical for Linux deployment)
+*.sh text eol=lf
+
+# Python files
+*.py text eol=lf
+
+# Everything else — auto
+* text=auto
